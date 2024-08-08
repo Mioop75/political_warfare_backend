@@ -15,7 +15,7 @@ async function bootstrap() {
   app.use(compression());
 
   app.enableCors({
-    origin: ['http://localhost:5000'],
+    origin: [config.get('SITE_API')],
   });
 
   app.useGlobalPipes(
