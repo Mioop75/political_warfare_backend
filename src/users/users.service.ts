@@ -12,7 +12,9 @@ export class UsersService {
     });
 
     if (!foundUser) {
-      const createdUser = await this.prisma.user.create({ data: { ...dto } });
+      const createdUser = await this.prisma.user.create({
+        data: { ...dto, level: { create: { current: 1, sum: 0 } } },
+      });
 
       return createdUser;
     }

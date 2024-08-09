@@ -23,9 +23,17 @@ model User {
   updatedAt       DateTime  @updatedAt @db.Timestamptz(3)
   telegram_id     Int       @unique
   isInstructioned Boolean   @default(false)
-  coins           Int       @default(0)
-  level           Int       @default(1)
+  coins           Float     @default(0)
+  level           Level     @relation("user_level", fields: [level_id], references: [id])
+  level_id        Int       @unique
   user_sessions   Session[] @relation("user_session")
+}
+
+model Level {
+  id      Int   @id @default(autoincrement())
+  current Int   @default(0)
+  sum     Float @default(0)
+  user    User? @relation("user_level")
 }
 
 model Session {
