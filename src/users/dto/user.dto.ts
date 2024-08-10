@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { IsString, Length } from 'class-validator';
+
+export class LevelDto {
+  current: number;
+  sum: number;
+}
 
 export class UserDto {
   @Expose()
@@ -18,7 +23,8 @@ export class UserDto {
   username: string;
 
   @Expose()
-  level: number;
+  @Type(() => LevelDto)
+  level: LevelDto;
 
   @Expose()
   coins: number;

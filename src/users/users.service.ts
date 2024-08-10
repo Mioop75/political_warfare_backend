@@ -9,11 +9,13 @@ export class UsersService {
   async getMe(dto: InputUserDto) {
     const foundUser = await this.prisma.user.findFirst({
       where: { telegram_id: dto.telegram_id },
+      include: { level: true },
     });
 
     if (!foundUser) {
       const createdUser = await this.prisma.user.create({
         data: { ...dto, level: { create: { current: 1, sum: 0 } } },
+        include: { level: true },
       });
 
       return createdUser;
@@ -30,6 +32,7 @@ export class UsersService {
     const updatedUser = await this.prisma.user.update({
       where: { uuid: foundUser.uuid },
       data: { isInstructioned: true },
+      include: { level: true },
     });
 
     return updatedUser;
