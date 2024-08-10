@@ -14,9 +14,7 @@ async function bootstrap() {
   app.get(PrismaService);
   app.use(compression());
 
-  app.enableCors({
-    origin: ['*'],
-  });
+  app.enableCors();
 
   app.useGlobalPipes(
     new ValidationPipe({
