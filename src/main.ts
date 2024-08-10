@@ -14,8 +14,6 @@ async function bootstrap() {
   app.get(PrismaService);
   app.use(compression());
 
-  console.log(config.get('SITE_API'));
-
   app.enableCors({
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     origin: config.get('SITE_API'),
