@@ -15,9 +15,7 @@ export class BotService implements OnModuleInit {
 
   async botMessage() {
     const webApp = this.config.get('SITE_API');
-    const bot = new TelegramBot(this.config.get('BOT_API_TOKEN'), {
-      polling: true,
-    });
+    const bot = new TelegramBot(this.config.get('BOT_API_TOKEN'));
 
     bot.on('message', async (msg) => {
       const chatId = msg.chat.id;
