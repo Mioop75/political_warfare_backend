@@ -1,12 +1,16 @@
 import { Expose } from 'class-transformer';
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class TappingDto {
   @Expose()
   @IsString()
   user_uuid: string;
+}
+
+export class GetCoinsAndEnergyDto {
+  @Expose()
+  coins: number;
 
   @Expose()
-  @IsNumber()
-  coin: number;
+  energy: number;
 }

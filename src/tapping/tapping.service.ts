@@ -6,10 +6,21 @@ import { TappingDto } from './tapping.dto';
 export class TappingService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getCoinsAndEnergy(dto: TappingDto) {
+    const user = await this.prisma.user.findFirst({
+      where: { uuid: dto.user_uuid },
+      include: { energy: true },
+    });
+
+    if (!user) throw new UnauthorizedException('Вы не зарегистрированы');
+
+    return { coins: user.coins, energy: user.energy.current };
+  }
+
   async tapping(dto: TappingDto) {
     const user = await this.prisma.user.findFirst({
       where: { uuid: dto.user_uuid },
-      include: { energy: true, level: true },
+      include: { energy: true },
     });
 
     if (!user) throw new UnauthorizedException('Вы не зарегистрированы');
@@ -20,8 +31,11 @@ export class TappingService {
         coins: user.coins + 1,
         energy: { update: { current: user.energy.current - 1 } },
       },
+      include: {
+        energy: true,
+      },
     });
 
-    return updatedUser;
+    return { coins: updatedUser.coins, energy: updatedUser.energy.current };
   }
 }
