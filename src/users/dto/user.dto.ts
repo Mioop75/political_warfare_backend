@@ -14,7 +14,7 @@ export class UserDto {
   @Expose()
   @IsString()
   @ApiProperty({ example: 'name' })
-  name: string;
+  first_name: string;
 
   @Expose()
   @IsString()
