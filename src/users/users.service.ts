@@ -14,7 +14,11 @@ export class UsersService {
 
     if (!foundUser) {
       const createdUser = await this.prisma.user.create({
-        data: { ...dto, level: { create: { current: 1, sum: 0 } } },
+        data: {
+          ...dto,
+          level: { create: { current: 1, sum: 0 } },
+          energy: { create: { current: 1000, max: 1000 } },
+        },
         include: { level: true },
       });
 

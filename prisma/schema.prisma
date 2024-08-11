@@ -17,7 +17,7 @@ datasource db {
 
 model User {
   uuid            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name            String
+  first_name      String
   username        String
   created_at      DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt       DateTime  @updatedAt @db.Timestamptz(3)
@@ -26,6 +26,8 @@ model User {
   coins           Float     @default(0)
   level           Level     @relation("user_level", fields: [level_id], references: [id])
   level_id        Int       @unique
+  energy          Energy    @relation("user_energy", fields: [energy_id], references: [id])
+  energy_id       Int       @unique
   user_sessions   Session[] @relation("user_session")
 }
 
@@ -34,6 +36,13 @@ model Level {
   current Int   @default(0)
   sum     Float @default(0)
   user    User? @relation("user_level")
+}
+
+model Energy {
+  id      Int   @id @default(autoincrement())
+  current Int   @default(1000)
+  max     Int   @default(1000)
+  user    User? @relation("user_energy")
 }
 
 model Session {
