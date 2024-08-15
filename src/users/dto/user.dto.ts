@@ -3,8 +3,19 @@ import { Expose, Type } from 'class-transformer';
 import { IsString, Length } from 'class-validator';
 
 export class LevelDto {
+  @Expose()
   current: number;
+
+  @Expose()
   sum: number;
+}
+
+class EnergyDto {
+  @Expose()
+  current: number;
+
+  @Expose()
+  max: number;
 }
 
 export class UserDto {
@@ -25,6 +36,13 @@ export class UserDto {
   @Expose()
   @Type(() => LevelDto)
   level: LevelDto;
+
+  @Expose()
+  @Type(() => EnergyDto)
+  energy: EnergyDto;
+
+  @Expose()
+  profit: number;
 
   @Expose()
   coins: number;
