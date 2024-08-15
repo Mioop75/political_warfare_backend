@@ -4,9 +4,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import config from 'src/config/config';
 import { BotService } from './bot/bot.service';
-import { ImprovesModule } from './improves/improves.module';
 import { TappingModule } from './tapping/tapping.module';
 import { UsersModule } from './users/users.module';
+import { ImprovementsModule } from './improvements/improvements.module';
 
 @Module({
   imports: [
@@ -21,8 +21,8 @@ import { UsersModule } from './users/users.module';
       exclude: ['/api*'],
     }),
     UsersModule,
-    ImprovesModule,
     TappingModule,
+    ImprovementsModule,
   ],
   providers: [BotService],
 })

@@ -9,7 +9,7 @@ export class UsersService {
   async getMe(dto: InputUserDto) {
     const foundUser = await this.prisma.user.findFirst({
       where: { telegram_id: dto.telegram_id },
-      include: { level: true },
+      include: { level: true, energy: true },
     });
 
     if (!foundUser) {
@@ -19,7 +19,7 @@ export class UsersService {
           level: { create: { current: 1, sum: 0 } },
           energy: { create: { current: 1000, max: 1000 } },
         },
-        include: { level: true },
+        include: { level: true, energy: true },
       });
 
       return createdUser;
