@@ -16,24 +16,36 @@ datasource db {
 }
 
 model User {
-  uuid            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  uuid            String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   first_name      String
   username        String
-  created_at      DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt       DateTime @updatedAt @db.Timestamptz(3)
-  telegram_id     BigInt   @unique
-  isInstructioned Boolean  @default(false)
-  profit          Float    @default(3600)
-  coins           Float    @default(4000)
-  level           Level    @relation("user_level", fields: [level_id], references: [id])
-  level_id        Int      @unique
-  energy          Energy   @relation("user_energy", fields: [energy_id], references: [id])
-  energy_id       Int      @unique
+  created_at      DateTime                @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime                @updatedAt @db.Timestamptz(3)
+  telegram_id     BigInt                  @unique
+  isInstructioned Boolean                 @default(false)
+  profit          Float                   @default(3600)
+  coins           Float                   @default(4000)
+  level           Level                   @relation("user_level", fields: [level_id], references: [id])
+  level_id        Int                     @unique
+  energy          Energy                  @relation("user_energy", fields: [energy_id], references: [id])
+  energy_id       Int                     @unique
+  improvements    Purchased_improvement[]
+  referrals       Referral[]              @relation("referral")
+  invited         Referral?               @relation("invited")
+}
+
+model Referral {
+  id            Int     @id @default(autoincrement())
+  referral      User    @relation("referral", fields: [referral_uuid], references: [uuid])
+  referral_uuid String  @db.Uuid
+  invited       User?   @relation("invited", fields: [invited_uuid], references: [uuid])
+  invited_uuid  String? @unique @db.Uuid
 }
 
 model Level {
   id      Int   @id @default(autoincrement())
   current Int   @default(0)
+  percent Float @default(0)
   sum     Float @default(0)
   user    User? @relation("user_level")
 }
@@ -46,11 +58,44 @@ model Energy {
 }
 
 model Improvement {
-  uuid           String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  img            String
-  title          String
-  type           String
-  cost           Int
-  required_level Int
-  profit         Int
+  uuid         String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  img          String
+  title        String
+  type         String
+  informations Purchased_improvement[]
+}
+
+model Purchased_improvement {
+  id               Int               @id @default(autoincrement())
+  purchased        Boolean           @default(false)
+  improvement      Improvement?      @relation(fields: [improvement_uuid], references: [uuid])
+  improvement_uuid String?           @db.Uuid
+  information      Info_Improvement?
+  users            User[]
+}
+
+model Info_Improvement {
+  id                          Int                     @id @default(autoincrement())
+  cost                        Int
+  profit                      Int
+  required_level              Int                     @default(0)
+  level                       Int
+  required_improvements       Required_Improvements[]
+  other_required_improvements Required_Improvements[] @relation("other")
+  improvement_uuid            String?                 @db.Uuid
+  purchased_improvement       Purchased_improvement   @relation(fields: [purchased_improvement_id], references: [id])
+  purchased_improvement_id    Int                     @unique
+
+  @@map("info_improvement")
+}
+
+model Required_Improvements {
+  id                  Int              @id @default(autoincrement())
+  info_improvement    Info_Improvement @relation(fields: [info_improvement_id], references: [id])
+  info_improvement_id Int
+
+  other_info_improvement    Info_Improvement @relation("other", fields: [other_info_improvement_id], references: [id])
+  other_info_improvement_id Int
+
+  @@map("required_improvements")
 }

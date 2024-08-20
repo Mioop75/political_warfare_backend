@@ -1,16 +1,9 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { AuthGuard } from '@/auth/auth.guard';
+import { Controller, Delete, HttpCode, Patch, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { InputUserDto } from './dto/input-user.dto';
 import { UserDto } from './dto/user.dto';
+import { CurrentUser } from './user.decorator';
 import { UsersService } from './users.service';
 
 @ApiTags('users')
@@ -18,16 +11,10 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('me')
-  async getMe(@Body() dto: InputUserDto) {
-    const gotUser = await this.usersService.getMe(dto);
-
-    return plainToInstance(UserDto, gotUser);
-  }
-
+  @UseGuards(AuthGuard)
   @Patch('set-instructioned')
-  async setInstructioned(@Body() dto: { uuid: string }) {
-    const updatedUser = await this.usersService.setInstructed(dto.uuid);
+  async setInstructioned(@CurrentUser('uuid') uuid: string) {
+    const updatedUser = await this.usersService.setInstructed(uuid);
 
     return plainToInstance(UserDto, updatedUser);
   }
@@ -38,8 +25,9 @@ export class UsersController {
   })
   @ApiUnauthorizedResponse({ description: "User isn't authorized" })
   @HttpCode(204)
-  @Delete(':uuid')
-  async delete(@Param('uuid') uuid: string) {
+  @UseGuards(AuthGuard)
+  @Delete('')
+  async delete(@CurrentUser('uuid') uuid: string) {
     await this.usersService.delete(uuid);
 
     return 'Account was deleted';

@@ -1,6 +1,23 @@
-import { PickType } from '@nestjs/swagger';
+import { UserDto } from '@/users/dto/user.dto';
 import { Expose, Type } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
+
+export class InfoImprovementDto {
+  @Expose()
+  id: number;
+
+  @Expose()
+  cost: number;
+
+  @Expose()
+  profit: number;
+
+  @Expose()
+  required_level: number;
+
+  @Expose()
+  level: number;
+}
 
 export class ImprovementDto {
   @Expose()
@@ -19,16 +36,42 @@ export class ImprovementDto {
   type: string;
 
   @Expose()
-  @IsNumber()
-  cost: number;
+  @Type(() => InfoImprovementDto)
+  information: InfoImprovementDto;
 
   @Expose()
-  @IsNumber()
-  required_level: number;
+  @Type(() => PurchasedImprovementDto)
+  purchased: PurchasedImprovementDto[];
+}
+
+export class PurchasedImprovementDto {
+  @Expose()
+  id: number;
 
   @Expose()
-  @IsNumber()
-  profit: number;
+  @Type(() => InfoImprovementDto)
+  info_improvement: InfoImprovementDto;
+
+  @Expose()
+  @Type(() => ImprovementDto)
+  improvement: ImprovementDto;
+
+  @Expose()
+  @Type(() => UserDto)
+  user: UserDto;
+}
+
+export class RequiredImprovements {
+  @Expose()
+  id: number;
+
+  @Expose()
+  @Type(() => InfoImprovementDto)
+  info_improvement: InfoImprovementDto;
+
+  @Expose()
+  @Type(() => InfoImprovementDto)
+  other_info_improvement: InfoImprovementDto;
 }
 
 export class ImprovementsWithTypesDto {
@@ -40,21 +83,12 @@ export class ImprovementsWithTypesDto {
   improvements: ImprovementDto[];
 }
 
-export class InputImprovementDto extends PickType(ImprovementDto, [
-  'img',
-  'title',
-  'cost',
-  'required_level',
-  'type',
-  'profit',
-]) {}
-
 export class BuyImprovementDto {
   @Expose()
   @IsString()
-  user_uuid: string;
+  improvement_uuid: string;
 
   @Expose()
-  @IsString()
-  improvement_uuid: string;
+  @IsNumber()
+  infoImprovement_id: number;
 }

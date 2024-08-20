@@ -7,6 +7,8 @@ import { BotService } from './bot/bot.service';
 import { TappingModule } from './tapping/tapping.module';
 import { UsersModule } from './users/users.module';
 import { ImprovementsModule } from './improvements/improvements.module';
+import { AuthModule } from './auth/auth.module';
+import { ReferralsModule } from './referrals/referrals.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { ImprovementsModule } from './improvements/improvements.module';
     UsersModule,
     TappingModule,
     ImprovementsModule,
+    AuthModule,
+    ReferralsModule,
   ],
   providers: [BotService],
 })
