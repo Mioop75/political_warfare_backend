@@ -24,7 +24,7 @@ model User {
   telegram_id     BigInt                  @unique
   isInstructioned Boolean                 @default(false)
   profit          Float                   @default(3600)
-  coins           Float                   @default(4000)
+  coins           Float                   @default(1000000)
   level           Level                   @relation("user_level", fields: [level_id], references: [id])
   level_id        Int                     @unique
   energy          Energy                  @relation("user_energy", fields: [energy_id], references: [id])
